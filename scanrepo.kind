@@ -1,0 +1,47 @@
+---
+kind: scanrepo
+ext: .scanrepo
+version: 1
+mime: application/x-scanrepo
+binary: false
+trigger: scanrepo paper git printed repo physical software scan back
+---
+
+## Purpose
+
+Printable master of a git snapshot. A human can read the source on the page. A phone camera recovers the same bytes through page QR codes, then a restorer rebuilds blobs, a tree, and a commit so `git checkout` matches the paper.
+
+## Structure
+
+1. First line is the magic banner `# scanrepo v1`
+2. YAML frontmatter between `---` fences with keys: repo, edition, branch, commit, tree, parent, pages
+3. One or more page blocks. Each block starts with `## PAGE <n>` and ends with `## END PAGE`
+4. Inside a page block, header lines are `key: value` until a line that is exactly `text:`
+5. Lines after `text:` and before `## END PAGE` are the file bytes, including blank lines
+6. Required page keys: path, mode, blob, chunk, chunk_of
+7. Cover identity lives only in frontmatter. File bytes live only in page blocks.
+
+## Parse rules
+
+- Reject the file if line 1 is not `# scanrepo v1`
+- Frontmatter keys are required: repo, edition, branch, commit, tree, parent, pages
+- `parent` may be the token `none`
+- Page blocks must be numbered 1..pages with no gaps
+- Split header lines on the first `: `
+- File bytes are everything between the `text:` line and `## END PAGE`, with the trailing newline before `## END PAGE` stripped
+- Rejoin chunks for the same path in chunk order before hashing
+- Blob check: SHA-1 of `blob <len>\0` plus rejoined bytes must equal the `blob` field
+- Tree and commit fields are git object ids; the restorer recomputes them and rejects a mismatch
+
+## Write rules
+
+- Always start with `# scanrepo v1`
+- One edition per file. A later printing is a new file with edition bumped and parent set to the prior commit
+- Never put packfiles or deltas in the body. Store full blob text
+- Chunk a file only when it will not fit one printed page (about 1800 source characters)
+- Hash with git blob rules, not raw SHA-1 of the file
+- Page order is the recovery order. Path order inside a tree is byte-sorted, git style
+
+## Example
+
+See sample.scanrepo
