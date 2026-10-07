@@ -2,6 +2,10 @@
 
 Physical copy of a git repo. Print it. Read it. Scan it back.
 
+## Print this repo automatically
+
+[Print Repo (scanrepo)](https://github.com/marketplace/actions/print-repo-scanrepo) is a GitHub Action that turns every release into a printable booklet and attaches it to the release. Add `uses: fitzyracing1/scanrepo-action@v1` to a release workflow. The full snippet is in [scanrepo-action](https://github.com/fitzyracing1/scanrepo-action).
+
 Kind: `scanrepo`  
 Extension: `.scanrepo`  
 MIME: `application/x-scanrepo`  
