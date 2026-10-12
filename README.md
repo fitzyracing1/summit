@@ -37,3 +37,8 @@ Phone QR apps are enough for this sample. Bigger files need chunked codes (about
 ## Limits
 
 This is a snapshot format, not a packfile. Deltas and binary assets are out. A 50 KB text repo is a thin booklet. A photo-heavy repo is the wrong thing to print.
+
+## Documentation
+
+- In-repo docs: [docs/](docs/index.md)
+- Wiki: [https://github.com/fitzyracing1/summit/wiki](https://github.com/fitzyracing1/summit/wiki)
